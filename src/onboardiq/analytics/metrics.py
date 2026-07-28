@@ -9,6 +9,24 @@ from onboardiq.utils.logging import get_logger
 logger = get_logger(__name__)
 
 
+def summarize_contributor_risk(df: pd.DataFrame) -> pd.DataFrame:
+    """Summarize contributor risk levels from onboarding and risk scores."""
+
+    if df.empty:
+        return pd.DataFrame(columns=["contributor", "onboarding_score", "risk_score", "risk_level"])
+
+    summary = df[["contributor", "onboarding_score", "risk_score"]].copy()
+    summary["risk_level"] = pd.cut(
+        summary["risk_score"],
+        bins=[-float("inf"), 0.35, 0.7, float("inf")],
+        labels=["low", "medium", "high"],
+        include_lowest=True,
+    )
+    summary["risk_level"] = summary["risk_level"].astype(str)
+    summary["risk_level"] = summary["risk_level"].replace({"nan": "medium"})
+    return summary
+
+
 def calculate_kpis(df: pd.DataFrame) -> dict[str, float]:
     """Calculate onboarding KPIs from a pull request dataset."""
 
