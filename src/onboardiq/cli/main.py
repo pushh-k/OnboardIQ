@@ -11,7 +11,7 @@ from onboardiq.analytics.metrics import calculate_kpis
 from onboardiq.services.cleaning import clean_dataset
 from onboardiq.services.feature_engineering import engineer_contributor_features
 from onboardiq.utils.logging import get_logger
-from onboardiq.utils.validation import validate_dataset
+from onboardiq.utils.validation import summarize_validation_report, validate_dataset
 
 logger = get_logger(__name__)
 
@@ -22,7 +22,7 @@ def run_pipeline(input_path: str, output_path: str) -> None:
     logger.info("Starting pipeline for %s", input_path)
     df = pd.read_csv(input_path)
     report = validate_dataset(df, required_columns=["id", "contributor", "created_at"])
-    logger.info("Validation report: %s", report)
+    logger.info("%s", summarize_validation_report(report))
     cleaned = clean_dataset(df)
     features = engineer_contributor_features(cleaned)
     metrics = calculate_kpis(features)
