@@ -29,7 +29,7 @@ Set environment variables:
 - `OPENAI_API_KEY`
 - `DATABASE_URL`
 
-## Project Structure
+## Structure of project
 
 - `src/onboardiq/` application package
 - `tests/` unit and integration tests
@@ -40,19 +40,5 @@ Set environment variables:
 
 
 
-## requirements
 
-pandas>=2.2.0
-numpy>=1.26.0
-sqlalchemy>=2.0.30
-psycopg2-binary>=2.9.9
-plotly>=5.18.0
-streamlit>=1.35.0
-requests>=2.32.0
-python-dotenv>=1.0.1
-pytest>=8.3.0
-black>=24.4.0
-ruff>=0.5.0
-mypy>=1.10.0
-openai>=1.50.0
 
