@@ -11,7 +11,7 @@ OnboardIQ is an enterprise-grade analytics platform for understanding GitHub con
 - Streamlit dashboard
 - SQL schema for PostgreSQL
 - CLI pipeline runner
-- Testing and documentation scaffolding
+- Testing documentation scaffolding
 
 ## Quick Start
 
