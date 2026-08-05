@@ -24,3 +24,5 @@ def test_engineer_contributor_features_creates_expected_columns() -> None:
     assert "merge_time_hours" in result.columns
     assert "documentation_quality_score" in result.columns
     assert "ci_failure_rate" in result.columns
+    assert "risk_category" in result.columns
+    assert set(result["risk_category"]) <= {"low", "medium", "high"}

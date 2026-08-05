@@ -53,6 +53,11 @@ def engineer_contributor_features(df: pd.DataFrame) -> pd.DataFrame:
         features["documentation_quality_score"] * 0.4 + features["ci_failure_rate"] * 0.6
     )
     features["risk_score"] = 1.0 - features["onboarding_score"]
+    features["risk_category"] = pd.cut(
+        features["risk_score"],
+        bins=[-0.01, 0.4, 0.75, 1.0],
+        labels=["low", "medium", "high"],
+    ).astype(str)
 
     logger.info("Engineered contributor features for %s rows", len(features))
     return features
