@@ -49,3 +49,33 @@ def validate_dataset(
 
     logger.info("Validation completed with %s rows", report["row_count"])
     return report
+
+
+def summarize_validation_report(report: dict[str, Any]) -> str:
+    """Convert a validation report into a short human-readable summary."""
+
+    if report.get("is_valid", False):
+        return (
+            f"Dataset validation passed: {report.get('row_count', 0)} rows, "
+            f"{report.get('column_count', 0)} columns."
+        )
+
+    issues: list[str] = []
+    missing_columns = report.get("required_columns_missing", [])
+    if missing_columns:
+        issues.append(f"missing columns: {', '.join(missing_columns)}")
+
+    duplicate_ids = int(report.get("duplicate_ids", 0))
+    if duplicate_ids:
+        issues.append(f"{duplicate_ids} duplicate id{'s' if duplicate_ids != 1 else ''}")
+
+    missing_values = report.get("missing_values", {})
+    if missing_values:
+        details = ", ".join(f"{column}={count}" for column, count in missing_values.items())
+        issues.append(f"missing values: {details}")
+
+    invalid_dates = int(report.get("invalid_dates", 0))
+    if invalid_dates:
+        issues.append(f"{invalid_dates} invalid date{'s' if invalid_dates != 1 else ''}")
+
+    return "Dataset validation failed: " + "; ".join(issues)
