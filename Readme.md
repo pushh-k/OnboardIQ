@@ -29,8 +29,6 @@ Set environment variables:
 - `OPENAI_API_KEY`
 - `DATABASE_URL`
 
-> Copy `.env.example` to `.env` before running the app locally and keep secrets out of version control.
-
 ## Project Structure
 
 - `src/onboardiq/` application package

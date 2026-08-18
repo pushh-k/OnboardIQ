@@ -11,34 +11,13 @@ from onboardiq.utils.logging import get_logger
 logger = get_logger(__name__)
 
 
-def _normalize_required_columns(required_columns: list[str] | None) -> list[str]:
-    """Return a cleaned, de-duplicated list of required columns."""
-    if not required_columns:
-        return []
-
-    normalized = []
-    seen: set[str] = set()
-    for column in required_columns:
-        cleaned = str(column).strip()
-        if not cleaned or cleaned in seen:
-            continue
-        seen.add(cleaned)
-        normalized.append(cleaned)
-    return normalized
-
-
-def _find_missing_columns(df: pd.DataFrame, required_columns: list[str]) -> list[str]:
-    """Return the subset of required columns not present in the DataFrame."""
-    return [column for column in required_columns if column not in df.columns]
-
-
 def validate_dataset(
     df: pd.DataFrame,
     required_columns: list[str] | None = None,
 ) -> dict[str, Any]:
     """Validate a dataset and return a structured report."""
 
-    required_columns = _normalize_required_columns(required_columns)
+    required_columns = required_columns or []
     report: dict[str, Any] = {
         "required_columns_missing": [],
         "duplicate_ids": 0,
@@ -49,7 +28,7 @@ def validate_dataset(
         "is_valid": True,
     }
 
-    missing_columns = _find_missing_columns(df, required_columns)
+    missing_columns = [col for col in required_columns if col not in df.columns]
     report["required_columns_missing"] = missing_columns
     if missing_columns:
         report["is_valid"] = False
