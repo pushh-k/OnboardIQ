@@ -18,6 +18,7 @@ def validate_dataset(
     """Validate a dataset and return a structured report."""
 
     required_columns = required_columns or []
+    # Keep the report shape stable so callers can inspect every validation result.
     report: dict[str, Any] = {
         "required_columns_missing": [],
         "duplicate_ids": 0,
@@ -28,6 +29,7 @@ def validate_dataset(
         "is_valid": True,
     }
 
+    # Required columns are checked before row-level data quality checks.
     missing_columns = [col for col in required_columns if col not in df.columns]
     report["required_columns_missing"] = missing_columns
     if missing_columns:
@@ -36,12 +38,14 @@ def validate_dataset(
     if "id" in df.columns:
         report["duplicate_ids"] = int(df["id"].duplicated().sum())
 
+    # Record missing values by column so consumers can identify data gaps.
     missing_values = {column: int(count) for column, count in df.isna().sum().items() if count > 0}
     report["missing_values"] = missing_values
     if missing_values:
         report["is_valid"] = False
 
     if "created_at" in df.columns:
+        # Invalid timestamps are coerced to NaT and counted as validation failures.
         parsed = pd.to_datetime(df["created_at"], errors="coerce")
         report["invalid_dates"] = int(parsed.isna().sum())
         if report["invalid_dates"] > 0:
